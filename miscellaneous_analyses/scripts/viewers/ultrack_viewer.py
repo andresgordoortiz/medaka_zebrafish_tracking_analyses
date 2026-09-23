@@ -21,8 +21,8 @@
 #   8. Export enriched CSVs → feeds R analysis pipeline
 #
 # USAGE:
-#   python embryo_viewer.py medaka_25082025_combined_spots.csv  \
-#                           --tracks medaka_25082025_combined_tracks.csv
+#   python embryo_viewer.py data/raw/medaka_mk2508_spots.csv  \
+#                           --tracks data/raw/medaka_mk2508_tracks.csv
 #
 # INSTALLATION:
 #   pip install "napari[all]" scipy pandas
@@ -2469,7 +2469,7 @@ class CrossSectionViewer:
 
     def _save_screenshot(self):
         """Save a single screenshot of the current cross-section view."""
-        out_dir = Path("analysis_output")
+        out_dir = Path("results/zebrafish_oriented")
         out_dir.mkdir(exist_ok=True)
         axis = self._axis
         pos = int(self.pos_slider.value)
@@ -2544,7 +2544,7 @@ class CrossSectionViewer:
                 except Exception:
                     pass
 
-        out_dir = Path("analysis_output")
+        out_dir = Path("results/zebrafish_oriented")
         out_dir.mkdir(exist_ok=True)
         axis = self._axis
         slab_pos = int(self.pos_slider.value)
@@ -2918,7 +2918,9 @@ class EmbryoViewer:
                 self._display_labels = data_np[:, ::ds, ::ds, ::ds]
             else:
                 self._display_labels = data_np
-            self._display_ds = ds
+            # Total downsample of stored segment voxels vs. world coords:
+            # load_downsample was applied to data_np before display ds.
+            self._display_ds = ds * lds
 
             # Build initial frames with hash-based coloring
             self._segment_frames = self._build_segment_display_frames(
@@ -2939,7 +2941,8 @@ class EmbryoViewer:
                             name="turbo_nuclei")
 
             # Add as 3D layer — avoids napari's 4D slicing pipeline
-            scale_3d = (ds, ds, ds)
+            total_ds = ds * lds
+            scale_3d = (total_ds, total_ds, total_ds)
             print(f"  Adding 3D Image layer ...")
             self._segments_layer = self.viewer.add_image(
                 self._segment_frames[0],
@@ -3551,9 +3554,8 @@ class EmbryoViewer:
         print(f"{n_tp} × {frame_mb:.1f} MB = {total_gb:.1f} GB "
               f"({_time.time() - t0:.1f}s)")
 
-        # Use same scale as segments if available, else (1,1,1)
-        ds = getattr(self, '_display_ds', 1) or 1
-        scale_3d = (ds, ds, ds)
+        # Processed image is loaded at full resolution → world scale (1,1,1).
+        scale_3d = (1, 1, 1)
 
         # Add as 3D Image layer (grayscale, additive for overlay with segments)
         self._processed_layer = self.viewer.add_image(
@@ -6309,7 +6311,7 @@ class EmbryoViewer:
 
         from qtpy.QtCore import QTimer
 
-        out_dir = Path("analysis_output")
+        out_dir = Path("results/zebrafish_oriented")
         out_dir.mkdir(exist_ok=True)
 
         self.lbl_export.value = "Exporting (please wait)..."
@@ -6564,7 +6566,7 @@ class EmbryoViewer:
             self.viewer.status = "Load spots first!"
             return
 
-        out_dir = Path("analysis_output")
+        out_dir = Path("results/zebrafish_oriented")
         out_dir.mkdir(exist_ok=True)
         f_start = int(self.track_frame_start.value)
         f_end = int(self.track_frame_end.value)

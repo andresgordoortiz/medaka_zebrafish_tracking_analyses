@@ -1,0 +1,22 @@
+mk2508 -- forward-window flow-map analysis (30 min AFTER each internalisation landmark)
+================================================================
+Voxel size:            0.640 um isotropic
+Frame interval:        30 s (= 0.50 min/frame)
+Temporal window:       30 min (= 60 frames) STARTING +1 frame AFTER each landmark
+Velocity lag:          4 frames (= 2.00 min)
+Smoothing window:      5 frames
+Spatial bin:           30 um,  min n/bin = 10
+Available recording:   frames 4-475 (= 237.5 min = 3.96 h)
+
+Internalisation anchors (3 landmarks, forward 30 min):
+  1 h before internalisation          (ref t=40, forward window frames 41-100)
+  Start of internalisation            (ref t=160, forward window frames 161-220)
+  1 h after internalisation           (ref t=280, forward window frames 281-340)
+
+Outputs in this folder:
+  04a_flow_30min_after_internalization_mk2508.pdf  (3 panels)
+  04c_majority_movement_mk2508_forward.pdf           (majority move-type strip)
+  flow_fields.csv                  (raw bin-level flow data)
+  panel_metadata.csv               (per-panel frame window and landmark)
+  panel_majority_movement.csv      (per-panel majority move_type)
+  summary_references.txt           (this file)

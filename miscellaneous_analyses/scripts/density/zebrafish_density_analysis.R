@@ -9,7 +9,7 @@
 #   3) DENSITY FOLD-CHANGE -- ROI vs outside geodesic density comparison
 #   4) SHELL THINNING -- cross-section + thickness over time
 #
-# I/O directory: analysis_output_zebrafish_05112025/
+# I/O directory: results/zebrafish_0511/
 # =============================================================================
 
 source("renv/activate.R")
@@ -25,7 +25,7 @@ library(RANN)
 # PARAMETERS
 # =============================================================================
 
-IO_DIR  <- "analysis_output_zebrafish_05112025"
+IO_DIR  <- "results/zebrafish_0511"
 
 FRAME_INTERVAL_SEC <- 120
 FRAME_INTERVAL_MIN <- FRAME_INTERVAL_SEC / 60
@@ -658,7 +658,7 @@ nn_dt <- data.table(
 nn_dt[, epoch := factor(epoch, levels = c("Frame 0", sprintf("Frame %d", ENDPOINT_FRAME)))]
 
 # Determine shared y-axis limits (load medaka summary if available)
-mk_nn_path <- file.path("analysis_output_medaka_25082025", "neighbor_density_summary.csv")
+mk_nn_path <- file.path("results/medaka_mk2508", "neighbor_density_summary.csv")
 if (file.exists(mk_nn_path)) {
   mk_nn_summary <- fread(mk_nn_path)
   all_nn_vals <- c(nn_dt$density, mk_nn_summary$mean_nn)

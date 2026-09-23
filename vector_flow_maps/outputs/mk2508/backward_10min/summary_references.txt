@@ -1,0 +1,30 @@
+mk2508 -- reference frames used in flow-map analysis
+================================================================
+Voxel size:            0.640 um isotropic
+Frame interval:        30 s (= 0.50 min)
+Temporal window:       10 min (= 20 frames) ending at each landmark
+Velocity lag:          4 frames (= 2.00 min)
+Smoothing window:      5 frames
+Spatial bin:           30 um,  min n/bin = 10
+
+Anchored to FIRST CONTRACTION (5 landmarks, absolute frames):
+  3 h before first contraction        (t = 116, window 96-115)
+  Start of internalization            (t = 160, window 140-159)
+  2 h before first contraction        (t = 236, window 216-235)
+  1 h before first contraction        (t = 356, window 336-355)
+  First contraction / bulge formed    (t = 476, window 456-475)
+
+Anchored to START OF INTERNALIZATION (3 landmarks, absolute frames):
+  1 h before internalization          (t = 40, window 20-39)
+  Start of internalization            (t = 160, window 140-159)
+  1 h after internalization           (t = 280, window 260-279)
+
+Outputs in this folder:
+  04a_flow_10min_before_landmarks_mk2508.pdf         (all 8 panels)
+  04a_flow_10min_before_contraction_mk2508.pdf       (5 contraction-anchored panels)
+  04a_flow_10min_before_internalization_mk2508.pdf   (3 internalization-anchored panels)
+  04c_majority_movement_mk2508.pdf                   (majority move-type strip per landmark)
+  flow_fields.csv                (raw bin-level flow data, all panels)
+  panel_metadata.csv             (per-panel frame window and landmark)
+  panel_majority_movement.csv    (per-panel majority move_type)
+  summary_references.txt         (this file)

@@ -1,0 +1,21 @@
+# ── R ──
+.Rproj.user
+.Rhistory
+.Rprofile
+.RData*
+.Ruserdata
+rsconnect
+renv/library/
+renv/staging/
+renv/local/
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── LaTeX build artifacts (only relevant if methods tex is added later) ──
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz

@@ -1,0 +1,56 @@
+{
+  "oriented": true,
+  "sphere_fitted": true,
+  "roi_set": false,
+  "roi_restricted_ingression": false,
+  "time_window": {
+    "frame_min": 0,
+    "frame_max": 149
+  },
+  "display": {
+    "display_pct": 100.0,
+    "max_tracks": 19021,
+    "current_color_mode": "frame"
+  },
+  "n_spots": 607248,
+  "n_frames": 151,
+  "columns_exported": [
+    "FILTERED_OUT",
+    "FILTER_REASON",
+    "TRACK_ID",
+    "FRAME",
+    "POSITION_Z",
+    "POSITION_Y",
+    "POSITION_X",
+    "id",
+    "parent_track_id",
+    "parent_id",
+    "PARENT_TRACK_ID",
+    "RADIAL_DIST",
+    "SPHERICAL_DEPTH",
+    "SPHERICAL_DEPTH_NORM",
+    "THETA_DEG",
+    "PHI_DEG"
+  ],
+  "ingression_criteria": {
+    "method": "multi-criteria embryology-informed",
+    "criteria": [
+      "median V_r <= threshold",
+      "inward fraction >= min_inward_fraction",
+      "track length >= min_track_frames",
+      "net radial displacement >= 0.5 \u00b5m inward",
+      "sustained consecutive inward >= max(3, 15% of track)"
+    ]
+  },
+  "sphere_radius": 352.50430349944594,
+  "track_filter": {
+    "enabled": true,
+    "min_track_length": 10,
+    "max_speed_um_per_frame": 9.899494936611665,
+    "n_spots_total": 607248,
+    "n_spots_kept": 565725,
+    "n_spots_filtered": 41523,
+    "n_tracks_total": 19022,
+    "n_tracks_filtered": 7590
+  }
+}

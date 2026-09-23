@@ -9,7 +9,7 @@
 #   3) DENSITY FOLD-CHANGE -- vertical (AP-VP) profile with ROI margin
 #   4) SHELL THINNING -- cross-section + thickness over time + lateral profile
 #
-# I/O directory: analysis_output_medaka_28052025/
+# I/O directory: results/medaka_mk2508/
 # =============================================================================
 
 source("renv/activate.R")
@@ -25,7 +25,7 @@ library(RANN)
 # PARAMETERS
 # =============================================================================
 
-IO_DIR  <- "analysis_output_medaka_25082025"
+IO_DIR  <- "results/medaka_mk2508"
 
 FRAME_INTERVAL_SEC <- 30
 FRAME_INTERVAL_MIN <- FRAME_INTERVAL_SEC / 60
@@ -717,7 +717,7 @@ nn_dt <- data.table(
 nn_dt[, epoch := factor(epoch, levels = c("Frame 0", sprintf("Frame %d", MAX_FRAME)))]
 
 # Determine shared y-axis limits (load zebrafish summary if available)
-zf_nn_path <- file.path("analysis_output_zebrafish_05112025", "neighbor_density_summary.csv")
+zf_nn_path <- file.path("results/zebrafish_0511", "neighbor_density_summary.csv")
 if (file.exists(zf_nn_path)) {
   zf_nn_summary <- fread(zf_nn_path)
   all_nn_vals <- c(nn_dt$density, zf_nn_summary$mean_nn)

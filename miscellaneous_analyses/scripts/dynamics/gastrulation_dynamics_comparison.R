@@ -21,13 +21,13 @@ library(scales)
 # PARAMETERS
 # =============================================================================
 
-MEDAKA_DIR  <- "analysis_output_medaka"
-ZEBRAFISH_DIR <- "analysis_output_zebrafish"
-OUTPUT_DIR <- "analysis_output_comparison"
+MEDAKA_DIR  <- "results/medaka_dynamics"
+ZEBRAFISH_DIR <- "results/zebrafish_dynamics"
+OUTPUT_DIR <- "results/cross_species_comparison"
 
 # Input folders with raw oriented tracks
-MEDAKA_INPUT  <- "oriented_medaka_ultrack"
-ZEBRAFISH_INPUT <- "oriented_zebrafish_ultrack"
+MEDAKA_INPUT  <- "data/oriented_medaka_ultrack"
+ZEBRAFISH_INPUT <- "data/oriented_zebrafish_ultrack"
 
 MEDAKA_FI   <- 30   # frame interval in seconds
 ZEBRAFISH_FI <- 120
@@ -45,8 +45,8 @@ MEDAKA_VOXEL_UM    <- 1.05152  # um per pixel
 ZEBRAFISH_VOXEL_UM <- 1.24785  # um per pixel
 
 # Nuclear stats directories
-MEDAKA_NUCLEAR_DIR   <- "nuclei_stats_medaka"
-ZEBRAFISH_NUCLEAR_DIR <- "nuclei_stats_zebrafish"
+MEDAKA_NUCLEAR_DIR   <- "nuclear_stats/medaka"
+ZEBRAFISH_NUCLEAR_DIR <- "nuclear_stats/zebrafish"
 
 if (!dir.exists(OUTPUT_DIR)) dir.create(OUTPUT_DIR, recursive = TRUE)
 

@@ -21,8 +21,8 @@
 #   8. Export enriched CSVs → feeds R analysis pipeline
 #
 # USAGE:
-#   python embryo_viewer.py medaka_25082025_combined_spots.csv  \
-#                           --tracks medaka_25082025_combined_tracks.csv
+#   python embryo_viewer.py data/raw/medaka_mk2508_spots.csv  \
+#                           --tracks data/raw/medaka_mk2508_tracks.csv
 #
 # INSTALLATION:
 #   pip install "napari[all]" scipy pandas
@@ -3252,7 +3252,7 @@ class EmbryoViewer:
 
         from qtpy.QtCore import QTimer
 
-        out_dir = Path("analysis_output")
+        out_dir = Path("results/zebrafish_oriented")
         out_dir.mkdir(exist_ok=True)
 
         self.lbl_export.value = "Exporting (please wait)..."
@@ -3553,7 +3553,7 @@ class EmbryoViewer:
         path, _ = QFileDialog.getSaveFileName(
             None,
             "Save Snapshot as PDF",
-            str(Path("analysis_output") / "snapshot.pdf"),
+            str(Path("results/zebrafish_oriented") / "snapshot.pdf"),
             "PDF Files (*.pdf);;All Files (*)",
         )
         if not path:
@@ -3663,7 +3663,7 @@ class EmbryoViewer:
             self.viewer.status = "Load spots first!"
             return
 
-        out_dir = Path("analysis_output")
+        out_dir = Path("results/zebrafish_oriented")
         out_dir.mkdir(exist_ok=True)
         f_start = int(self.track_frame_start.value)
         f_end = int(self.track_frame_end.value)

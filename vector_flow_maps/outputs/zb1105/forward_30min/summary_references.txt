@@ -1,0 +1,21 @@
+zb1105 -- reference frames used in flow-map analysis
+================================================================
+Voxel size:            1.250 um isotropic
+Frame interval:        120 s (= 2.00 min)
+Temporal window:       30 min (= 15 frames) starting at each landmark
+Velocity lag:          1 frames (= 2.00 min)
+Smoothing window:      1 frames (= 2.00 min)
+Spatial bin:           30 um,  min n/bin = 10
+
+Anchored to START OF INTERNALIZATION (3 landmarks, absolute frames):
+  1 h before internalisation          (t = 0, window 0-14)
+  Start of internalisation            (t = 30, window 30-44)
+  1 h after internalisation           (t = 60, window 60-74)
+
+Outputs in this folder:
+  04a_flow_30min_after_internalization_zb1105.pdf   (3 internalisation-anchored panels)
+  04c_majority_movement_zb1105.pdf                   (majority move-type strip per landmark)
+  flow_fields.csv                (raw bin-level flow data, all panels)
+  panel_metadata.csv             (per-panel frame window and landmark)
+  panel_majority_movement.csv    (per-panel majority move_type)
+  summary_references.txt         (this file)

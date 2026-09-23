@@ -31,17 +31,17 @@ suppressPackageStartupMessages({
 # Parameters
 # -----------------------------------------------------------------------------
 
-OUT_DIR <- "analysis_output_oneshot"
+OUT_DIR <- "results/oneshot_comparison"
 dir.create(OUT_DIR, showWarnings = FALSE)
 
-MEDAKA_INPUT  <- "oriented_medaka_ultrack"
-ZEBRAFISH_INPUT <- "oriented_zebrafish_ultrack"
+MEDAKA_INPUT  <- "data/oriented_medaka_ultrack"
+ZEBRAFISH_INPUT <- "data/oriented_zebrafish_ultrack"
 
 # Output dirs holding sphere_params, landmarks and thickness CSVs
-MEDAKA_OUT_LEGACY <- "analysis_output_medaka"        # has medaka_thickness_data.csv
-MEDAKA_OUT_NEW    <- "analysis_output_medaka_25082025"
-ZEB_OUT_LEGACY    <- "analysis_output_zebrafish"
-ZEB_OUT_NEW       <- "analysis_output_zebrafish_05112025"
+MEDAKA_OUT_LEGACY <- "results/medaka_dynamics"        # has medaka_thickness_data.csv
+MEDAKA_OUT_NEW    <- "results/medaka_mk2508"
+ZEB_OUT_LEGACY    <- "results/zebrafish_dynamics"
+ZEB_OUT_NEW       <- "results/zebrafish_0511"
 
 MEDAKA_FI  <- 30   # frame interval (s)
 ZEB_FI     <- 120
@@ -67,6 +67,7 @@ FIG1_ZEB_STRIP_MIN_START_CELLS   <- 200L
 FIG1_ZEB_STRIP_MIN_STABLE_RATIO  <- 0.90
 FIG1_ZEB_STRIP_SEARCH_PAD_DEG    <- 8L
 FIG1_COMPARE_BIN_MIN             <- 2
+FIG2_STEP_TYPE_TCAP_MIN          <- 200
 
 FIG5_MIN_DURATION_MIN            <- 20
 FIG5_MAX_DURATION_MIN            <- 60
@@ -970,13 +971,15 @@ step_comp <- vel_all[!is.na(movement_type),
   .(n = .N), by = .(species, time_bin, movement_type)]
 step_comp[, pct := 100 * n / sum(n), by = .(species, time_bin)]
 step_comp[, movement_type := factor(movement_type, levels = STEP_TYPE_LEVELS)]
+step_comp_plot <- step_comp[time_bin <= FIG2_STEP_TYPE_TCAP_MIN]
 
-p2d <- ggplot(step_comp, aes(time_bin, pct, fill = movement_type)) +
+p2d <- ggplot(step_comp_plot, aes(time_bin, pct, fill = movement_type)) +
   geom_area(alpha = 0.95, color = "white", linewidth = 0.2) +
   facet_wrap(~ species, ncol = 1) +
   scale_fill_manual(values = step_type_cols, drop = FALSE) +
   labs(title = "Movement type fraction over time (per-track classification)",
-       subtitle = "Each step inherits its TRACK's movement type (same scheme as medaka_dynamics_05_spatial_flow).",
+       subtitle = sprintf("Each step inherits its TRACK's movement type (same scheme as medaka_dynamics_05_spatial_flow). Shown only to %d min raw time.",
+                          FIG2_STEP_TYPE_TCAP_MIN),
        x = "Time (min)", y = "% of steps", fill = NULL) +
   theme_pub() +
   theme(plot.subtitle = element_text(size = 8, color = "grey25"))
@@ -1523,6 +1526,7 @@ fair_subsample <- function(df, retain_mod) {
 }
 fair_per_track <- function(sub, fi_sec, lag, sp_label) {
   fi_min <- fi_sec / 60
+  step_interval_min <- lag * fi_min
   # step vectors between consecutive retained frames
   sub[, `:=`(
     dx = POSITION_X - shift(POSITION_X, 1),
@@ -1556,6 +1560,7 @@ fair_per_track <- function(sub, fi_sec, lag, sp_label) {
         net_disp_um    = ndisp,
         total_path_um  = tot,
         straightness   = ndisp / tot,
+        mean_speed_um_min = mean(disp_3d[valid] / step_interval_min, na.rm = TRUE),
         mean_turning_deg = mean(turning_angle, na.rm = TRUE))
     }
   }, by = TRACK_ID]
@@ -1580,6 +1585,8 @@ cat("  Per-track metrics (fair 120-s sampling):\n")
 print(matched[, .(n              = .N,
                    med_dur        = median(duration_min),
                    med_disp       = median(net_disp_um),
+          med_speed      = median(mean_speed_um_min, na.rm = TRUE),
+          mean_speed     = mean(mean_speed_um_min, na.rm = TRUE),
                    med_straight   = median(straightness),
                    mean_straight  = mean(straightness),
                    med_turn_deg   = median(mean_turning_deg, na.rm = TRUE),
@@ -1588,10 +1595,13 @@ print(matched[, .(n              = .N,
 
 ws_s <- t.test(straightness     ~ species, data = matched)
 ws_t <- t.test(mean_turning_deg ~ species, data = matched)
+ws_v <- t.test(mean_speed_um_min ~ species, data = matched)
 cat(sprintf("  Welch t  straightness: t=%+.2f, p=%.2e\n",
             ws_s$statistic, ws_s$p.value))
 cat(sprintf("  Welch t  mean turning: t=%+.2f, p=%.2e\n",
             ws_t$statistic, ws_t$p.value))
+cat(sprintf("  Welch t  mean speed: t=%+.2f, p=%.2e\n",
+      ws_v$statistic, ws_v$p.value))
 
 track_surface_qc <- function(sp, ids, sp_label) {
   if (!length(ids)) return(data.table())
@@ -1927,6 +1937,16 @@ p5b <- ggplot(matched[!is.na(mean_turning_deg)],
        x = NULL, y = "deg between consecutive 120-s steps") +
   theme_pub() + theme(legend.position = "none")
 
+    p5e <- ggplot(matched[!is.na(mean_speed_um_min)],
+            aes(species, mean_speed_um_min, fill = species)) +
+      geom_violin(alpha = 0.6, color = NA) +
+      geom_boxplot(width = 0.18, outlier.size = 0.4, alpha = 0.8) +
+      scale_fill_manual(values = species_colors) +
+      labs(title = "Mean track speed",
+        subtitle = sprintf("Welch p = %.2g  (fair 120-s steps)", ws_v$p.value),
+        x = NULL, y = expression("mean speed (" * mu * "m/min)")) +
+      theme_pub() + theme(legend.position = "none")
+
 # MSD at COMMON real-time lags (2, 4, 6, ... 60 min) for BOTH species.
 # For medaka we accept only frame pairs whose Δframe is a multiple of 4
 # (≡ 120 s), so both species are compared at identical real-time lags.
@@ -1996,14 +2016,14 @@ p5d <- ggplot(msd[lag_min <= 60],
        color = NULL) +
   theme_pub()
 
-fig5 <- (p5a + p5b) / (p5c + p5d) +
+fig5 <- (p5a + p5b + p5e) / (p5c + p5d + plot_spacer()) +
   plot_annotation(
     title = "Track comparison (fair 120-s sampling)",
-    subtitle = sprintf("Tracks: %d-%d min full-track duration and >= %d um endpoint displacement. Path length, turning, and MSD all use common 120-s steps.",
+    subtitle = sprintf("Tracks: %d-%d min full-track duration and >= %d um endpoint displacement. Speed, path length, turning, and MSD all use common 120-s steps.",
                        FIG5_MIN_DURATION_MIN, FIG5_MAX_DURATION_MIN,
                        FIG5_MIN_NET_DISP_UM),
     theme = theme(plot.title = element_text(face = "bold", size = 14)))
-save_pdf(fig5, "05_matched_tracks.pdf", w = 13, h = 11)
+save_pdf(fig5, "05_matched_tracks.pdf", w = 16, h = 11)
 
 banner("DONE")
 cat(sprintf("  outputs in %s/\n", OUT_DIR))

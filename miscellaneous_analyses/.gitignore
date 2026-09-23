@@ -1,0 +1,51 @@
+# ── R ──
+.Rproj.user
+.Rhistory
+.Rprofile
+.RData*
+.Ruserdata
+rsconnect
+renv/library/
+renv/staging/
+renv/local/
+
+# ── Python ──
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+.python-version
+
+# ── Data (too large for git) ──
+# Raw TrackMate / ultrack CSVs
+data/raw/*.csv
+# Oriented tracks (typically 100 MB – 1.5 GB each)
+data/oriented_*_ultrack/oriented_*.csv
+data/medaka_mk*/*/tracks.csv
+data/medaka_mk*/results/ultrack_tracks.xml
+data/medaka_mk*/results/segments.zarr
+# Per-recording large oriented CSVs in results
+results/medaka_dynamics/medaka_dynamics_track_metrics.csv
+results/zebrafish_dynamics/zebrafish_dynamics_track_metrics.csv
+results/zebrafish_0511/zebrafish_dynamics_track_metrics.csv
+results/medaka_mk2508/oriented_*.csv
+results/medaka_mk2508/filtered_*.csv
+results/medaka_mk2508/track_summary.csv
+results/zebrafish_oriented/oriented_spots.csv
+# Ultrack zarr arrays
+data/oriented_medaka_ultrack/segments.zarr/
+
+# ── Generated outputs ──
+*.pdf
+
+# ── LaTeX build artifacts ──
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+.positai
