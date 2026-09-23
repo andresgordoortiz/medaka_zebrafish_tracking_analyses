@@ -27,7 +27,6 @@ miscellaneous_analyses/
 ├── scripts/                  # all analysis code, grouped by purpose
 │   ├── viewers/              # napari-based interactive viewers (orientation, sphere fit, ROI)
 │   │   ├── embryo_viewer.py          # TrackMate CSV input → oriented tracks
-│   │   ├── ultrack_viewer.py         # ultrack-format CSV input
 │   │   └── nuclei_tracks_viewer.py   # post-orientation viewer
 │   ├── preprocessing/        # one-shot preprocessing
 │   │   ├── nuclear_stats.py          # per-timepoint / per-slice nuclear stats from segmentation
@@ -119,7 +118,6 @@ renv::restore()
 | Step | Script | Language | Purpose |
 |------|--------|----------|---------|
 | 1 | `scripts/viewers/embryo_viewer.py` | Python (napari) | Interactive 4D viewer: orientation, sphere fit, margin selection, export |
-| 1′ | `scripts/viewers/ultrack_viewer.py` | Python (napari) | Variant of viewer for ultrack-format data |
 | 2 | `scripts/preprocessing/nuclear_stats.py` | Python | Per-timepoint nuclear density, size, internuclear distance from segmentation labels |
 | 3 | `scripts/dynamics/gastrulation_dynamics_medaka.R` | R | Medaka-specific dynamics analysis (10 figures) |
 | 3′ | `scripts/dynamics/gastrulation_dynamics_zebrafish.R` | R | Zebrafish-specific dynamics analysis (10 figures) |
@@ -137,9 +135,6 @@ renv::restore()
 # TrackMate export (medaka mk2508)
 uv run python scripts/viewers/embryo_viewer.py data/raw/medaka_mk2508_spots.csv \
     --tracks data/raw/medaka_mk2508_tracks.csv
-
-# ultrack-format export
-uv run python scripts/viewers/ultrack_viewer.py data/oriented_*_ultrack/oriented_tracks_*.csv
 ```
 
 **Inside the viewer:**
