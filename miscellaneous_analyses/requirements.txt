@@ -1,5 +1,7 @@
 # =============================================================================
-# Python dependencies for ultrack_viewer.py (napari 4D embryo viewer)
+# Python dependencies for the napari 4D embryo viewers
+#   - scripts/viewers/embryo_viewer.py
+#   - scripts/viewers/nuclei_tracks_viewer.py
 # =============================================================================
 #
 # Single requirements file compatible with pip, uv, pipenv, and mamba/conda.

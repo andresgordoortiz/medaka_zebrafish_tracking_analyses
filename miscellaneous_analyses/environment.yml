@@ -1,5 +1,7 @@
 # =============================================================================
-# Conda / mamba environment for ultrack_viewer.py (napari 4D embryo viewer)
+# Conda / mamba environment for the napari 4D embryo viewers
+#   - scripts/viewers/embryo_viewer.py
+#   - scripts/viewers/nuclei_tracks_viewer.py
 # =============================================================================
 #
 # Mirror of requirements.txt using conda-forge as the primary channel and
@@ -13,14 +15,14 @@
 #   conda env create -f environment.yml           # conda also works
 #
 # Activate and run:
-#   mamba activate ultrack-viewer
-#   python ultrack_viewer.py medaka_25082025_combined_spots.csv \
-#                           --tracks medaka_25082025_combined_tracks.csv
+#   mamba activate embryo-viewer
+#   python scripts/viewers/embryo_viewer.py data/raw/medaka_mk2508_spots.csv \
+#                           --tracks data/raw/medaka_mk2508_tracks.csv
 #
 # If you only need the pip-compatible list, see requirements.txt.
 # =============================================================================
 
-name: ultrack-viewer
+name: embryo-viewer
 
 channels:
   - conda-forge
