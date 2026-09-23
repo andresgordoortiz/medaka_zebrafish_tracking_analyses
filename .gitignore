@@ -19,7 +19,6 @@ __pycache__/
 # ── Data (too large for git) ──
 *.csv
 *.tsv
-analysis_output*/
 archive/
 
 # ── Generated outputs ──
